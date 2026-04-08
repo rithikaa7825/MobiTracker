@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Shop Service Management</title>
+    <!-- Google Fonts for Modern Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css?v=4">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-container">
+        <div class="login-card">
+            <div class="brand login-brand">
+                <span class="logo-icon">📱</span>
+                <h1>MobiTracker</h1>
+            </div>
+            <p class="login-subtitle">Sign in to manage services</p>
+            <form id="login-form">
+                <div class="form-group full-width">
+                    <label>Email Address</label>
+                    <input type="email" id="login-email" required placeholder="Enter your email">
+                </div>
+                <div class="form-group full-width">
+                    <label>Password</label>
+                    <input type="password" id="login-password" required placeholder="Enter password">
+                </div>
+                <p id="login-error" class="error-text" style="display: none;">Invalid email or password.</p>
+                <button type="submit" class="btn btn-primary full-width" style="margin-top: 1rem;">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal close-settings">&times;</span>
+            <h3>Change Profile Settings</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Update your login credentials.</p>
+            
+            <form id="settings-form">
+                <div class="form-group full-width">
+                    <label>Current Password</label>
+                    <input type="password" id="setting-old-pass" required placeholder="Required to save changes">
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="flex: 1;">
+                        <label>New Email</label>
+                        <input type="email" id="setting-new-email" required placeholder="new@example.com">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group" style="flex: 1;">
+                        <label>New Password</label>
+                        <input type="password" id="setting-new-pass" required placeholder="Enter new password">
+                    </div>
+                </div>
+                <p id="settings-error" class="error-text" style="display: none; text-align: left;">Incorrect current password.</p>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Save & Logout</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="main-app" class="app-container" style="display: none;">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <span class="logo-icon">📱</span>
+                <h1>MobiTracker</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li class="nav-item active" data-target="dashboard-view">Dashboard</li>
+                    <li class="nav-item" data-target="new-service-view">New Service</li>
+                    <li class="nav-item" data-target="tickets-view">Manage Tickets</li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header section -->
+            <header class="top-nav">
+                <h2 id="page-title">Dashboard</h2>
+                <div class="user-profile" style="display: flex; gap: 10px; align-items: center;">
+                    <span>Admin User</span>
+                    <button id="btn-settings" class="btn btn-sm btn-secondary" title="Settings">⚙️</button>
+                    <button id="btn-logout" class="btn btn-sm btn-secondary">Logout</button>
+                </div>
+            </header>
+
+            <div class="view-container">
+                <!-- Dashboard View -->
+                <section id="dashboard-view" class="view active-view">
+                    <div class="hero-section">
+                        <h2>Welcome to MobiTracker</h2>
+                        <p>Manage your mobile services and repairs with real-time tracking and premium insights.</p>
+                    </div>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <h3>Total Active</h3>
+                            <p class="metric-value" id="metric-active">0</p>
+                        </div>
+                        <div class="metric-card">
+                            <h3>Completed Today</h3>
+                            <p class="metric-value" id="metric-completed">0</p>
+                        </div>
+                        <div class="metric-card">
+                            <h3>Pending Income</h3>
+                            <p class="metric-value" id="metric-income">₹0</p>
+                        </div>
+                    </div>
+                    
+                    <div class="recent-activity">
+                        <h3>Recent Tickets</h3>
+                        <div class="table-container">
+                            <table class="tickets-table" id="dashboard-recent-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Customer</th>
+                                        <th>Device</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- New Service View -->
+                <section id="new-service-view" class="view">
+                    <div class="form-card">
+                        <form id="new-service-form">
+                            <!-- 1. Customer & Mobile Details -->
+                            <fieldset>
+                                <legend>Customer & Device Details</legend>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Customer Name</label>
+                                        <input type="text" name="customerName" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Contact Number</label>
+                                        <input type="text" name="customerContact" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Mobile Brand & Model</label>
+                                        <div class="input-group">
+                                            <input type="text" name="deviceModel" id="device-model-input" required>
+                                            <button type="button" id="scan-device-btn" class="btn btn-secondary" title="Scan with AI">📸 Scan</button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>IMEI Number</label>
+                                        <input type="text" name="imeiNumber">
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <!-- 2. Problem Details -->
+                            <fieldset>
+                                <legend>Problem & Condition</legend>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Problem Type</label>
+                                        <select name="problemType" required>
+                                            <option value="">Select Type</option>
+                                            <option value="Display Issue">Display Issue</option>
+                                            <option value="Software Issue">Software Issue</option>
+                                            <option value="Hardware Issue">Hardware Issue</option>
+                                            <option value="Water Damage">Water Damage</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Expected Delivery</label>
+                                        <input type="date" name="expectedDate" required>
+                                    </div>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Detailed Description</label>
+                                    <textarea name="problemDescription" rows="3" required></textarea>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Screen Condition</label>
+                                        <select name="screenCondition">
+                                            <option value="Not Broken">Not Broken</option>
+                                            <option value="Broken">Broken</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Power Status</label>
+                                        <select name="powerStatus">
+                                            <option value="Power On">Power On</option>
+                                            <option value="Power Off">Dead / Power Off</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group full-width">
+                                    <label>Mobile Device Image (Optional)</label>
+                                    <input type="file" id="mobile-image-input" accept="image/*">
+                                    <div class="image-preview-container" id="mobile-image-preview">
+                                        <p>No image selected</p>
+                                        <img src="" alt="Preview">
+                                    </div>
+                                    <input type="hidden" name="deviceImageBase64" id="device-image-base64">
+                                </div>
+                            </fieldset>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Create Service Ticket</button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- Ticket Management View -->
+                <section id="tickets-view" class="view">
+                    <div class="table-container">
+                        <table class="tickets-table" id="all-tickets-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Customer</th>
+                                    <th>Device</th>
+                                    <th>Problem</th>
+                                    <th>Service Date</th>
+                                    <th>Delivery Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Dynamic rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+                
+                <!-- Ticket Detail Modal -->
+                <div id="ticket-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close-modal">&times;</span>
+                        <h3 id="modal-service-id">SRV-1000</h3>
+                        
+                        <div class="modal-body">
+                            <div class="ticket-image-container" id="m-image-container" style="display:none;">
+                                <img id="m-device-image" class="modal-device-image" src="" alt="Device Image">
+                            </div>
+                            <div class="ticket-info">
+                                <div class="info-group">
+                                    <strong>Customer:</strong> <span id="m-customer"></span> (<span id="m-contact"></span>)
+                                </div>
+                                <div class="info-group">
+                                    <strong>Device:</strong> <span id="m-device"></span>
+                                </div>
+                                <div class="info-group">
+                                    <strong>Complaint:</strong> <span id="m-problem"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <span class="timeline-label">Service Received:</span>
+                                    <span class="timeline-value" id="m-date-received">-</span>
+                                </div>
+                                <div class="timeline-item">
+                                    <span class="timeline-label">Expected Delivery:</span>
+                                    <span class="timeline-value" id="m-date-expected">-</span>
+                                </div>
+                                <div class="timeline-item">
+                                    <span class="timeline-label">Actual Delivery:</span>
+                                    <span class="timeline-value" id="m-date-actual">-</span>
+                                </div>
+                            </div>
+                            
+                            <hr class="divider">
+                            
+                            <form id="update-ticket-form">
+                                <input type="hidden" id="update-ticket-id">
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Update Status</label>
+                                        <select id="update-status">
+                                            <option value="Pending">Pending</option>
+                                            <option value="In Progress">In Progress</option>
+                                            <option value="Completed">Completed</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Payment Status</label>
+                                        <select id="update-payment-status">
+                                            <option value="Unpaid">Unpaid</option>
+                                            <option value="Paid">Paid</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group full-width">
+                                    <label>Work Completed (Description)</label>
+                                    <textarea id="update-work" rows="2"></textarea>
+                                </div>
+                                
+                                <div class="form-group full-width">
+                                    <label>Spare Parts Used</label>
+                                    <input type="text" id="update-spares" placeholder="e.g., Screen, Battery">
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Service Charge (₹)</label>
+                                        <input type="number" id="update-service-charge" value="0">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Spare Parts Cost (₹)</label>
+                                        <input type="number" id="update-spares-cost" value="0">
+                                    </div>
+                                </div>
+                                
+                                <div class="total-bar">
+                                    <strong>Total Amount:</strong>
+                                    <span class="total-value">₹<span id="update-total">0</span></span>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="submit" class="btn btn-primary">Save Updates</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- AI Scanner Modal -->
+    <div id="scanner-modal" class="modal">
+        <div class="modal-content scanner-content">
+            <span class="close-modal close-scanner">&times;</span>
+            <h3>AI Mobile Scanner</h3>
+            <p id="scanner-status">System initializing...</p>
+            
+            <div class="scanner-wrapper" id="scanner-wrapper">
+                <video id="scanner-video" autoplay playsinline muted></video>
+                <canvas id="scanner-canvas"></canvas>
+            </div>
+            
+            <div class="form-actions" style="justify-content: center; margin-top: 1.5rem;">
+                <button type="button" id="capture-device-btn" class="btn btn-primary" disabled>Wait for System Check...</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Scripts (Pinned Versions for Stability) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.21.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.2/dist/coco-ssd.min.js"></script>
+
+    <!-- Scripts -->
+    <script src="db.js?v=3"></script>
+    <script src="app.js?v=5"></script>
+</body>
+</html>
