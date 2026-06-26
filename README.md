@@ -1,7 +1,5 @@
 📱 Mobi Tracker
 
-New Service Entry – MobiTracker https://share.google/lQAFkDJ5EJwWlCHMF
-
 A mobile service tracking application designed for mobile shops to manage customer devices, service status, and payments efficiently.
 
 🚀 Features
